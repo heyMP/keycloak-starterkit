@@ -1,0 +1,32 @@
+version: '3.7'
+services:
+  keycloak:
+    image: quay.io/keycloak/keycloak:11.0.2
+    environment: 
+      - DB_VENDOR=postgres
+      - DB_ADDR=postgres
+      - DB_DATABASE=keycloak
+      - DB_PASSWORD=password
+      - DB_USER=keycloak
+    ports: 
+      - 8080:8080
+  
+  postgres:
+    image: postgres:13
+    environment: 
+      - POSTGRES_DB=keycloak
+      - POSTGRES_USER=keycloak
+      - POSTGRES_PASSWORD=password
+    volumes: 
+      - postgres_data:/var/lib/postgresql/data
+
+
+  js-console:
+    build: ./js-console
+    volumes: 
+      - ./js-console/src:/usr/local/apache2/htdocs/
+    ports: 
+      - 8000:80
+
+volumes: 
+  postgres_data:
